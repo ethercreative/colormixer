@@ -2,7 +2,9 @@
 A set of Twig filters for modifying hex colors in [Craft](http://buildwithcraft.com/).
 
 ### Install
-Download / clone this repo into ```craft/plugins/colormixer```
+Download / clone this repo into ```craft/plugins/colormixer```.
+**Important:** Make sure you create the ```colormixer``` folder in the plugins directory.
+We've left the folder out to make it easy for anyone wanting to use the plugin as a Git Sub-module!
 
 ### Filters
 **hexToHsl**
