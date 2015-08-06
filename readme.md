@@ -1,5 +1,5 @@
-# Color Mixer *for [Craft](http://buildwithcraft.com/)*
-A set of Twig filters for modifying hex colors in Craft.
+# Color Mixer
+A set of Twig filters for modifying hex colors in [Craft](http://buildwithcraft.com/).
 
 ### Filters
 **hexToHsl**
