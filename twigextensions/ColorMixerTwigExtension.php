@@ -173,9 +173,11 @@ class ColorMixerTwigExtension extends Twig_Extension {
 	/**
 	 * Returns whether or not given color is considered "light"
 	 * @param string $color
-	 * @return boolean
+	 * @param int $threshold
+	 * @return bool
+	 * @throws Exception
 	 */
-	public function isLight( $color ){
+	public function isLight( $color, $threshold = 130 ){
 		$color = self::_checkHex($color);
 
 		// Get our color
@@ -183,14 +185,17 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		$r = hexdec($color[0].$color[1]);
 		$g = hexdec($color[2].$color[3]);
 		$b = hexdec($color[4].$color[5]);
-		return (( $r*299 + $g*587 + $b*114 )/1000 > 130);
+		return (( $r*299 + $g*587 + $b*114 )/1000 > $threshold);
 	}
+
 	/**
 	 * Returns whether or not a given color is considered "dark"
 	 * @param string $color
-	 * @return boolean
+	 * @param int $threshold
+	 * @return bool
+	 * @throws Exception
 	 */
-	public function isDark( $color ){
+	public function isDark( $color, $threshold = 130 ){
 		$color = self::_checkHex($color);
 
 		// Get our color
@@ -198,7 +203,7 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		$r = hexdec($color[0].$color[1]);
 		$g = hexdec($color[2].$color[3]);
 		$b = hexdec($color[4].$color[5]);
-		return (( $r*299 + $g*587 + $b*114 )/1000 <= 130);
+		return (( $r*299 + $g*587 + $b*114 )/1000 <= $threshold);
 	}
 	/**
 	 * Returns the complimentary color

@@ -61,19 +61,19 @@ Mixes two hexes together. The ```$amount``` to mix the colors together by is set
 **isLight**
 
 ```twig
-isLight
+isLight($threshold)
 ```
 
-Returns true if the color is considered "light", false if not.
+Returns true if the color is considered "light", false if not. The *optional* `$threshold` value determines at what point the color is considered light. Anything above this value is considered light. Defaults to 130, range is 0..255.
 
 
 **isDark**
 
 ```twig
-isDark
+isDark($threshold)
 ```
 
-Returns true if the color is considered "dark", false if not.
+Returns true if the color is considered "dark", false if not. The *optional* `$threshold` value determines at what point the color is considered dark. Anything below or equal to this value is considered dark. Defaults to 130, range is 0..255.
 
 
 **complementary**
