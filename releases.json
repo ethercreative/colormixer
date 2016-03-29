@@ -1,0 +1,21 @@
+[
+  {
+    "version": "0.1.2",
+    "downloadUrl": "https://github.com/ethercreative/ColorMixer/archive/v0.1.2.zip",
+    "date": "2015-08-21T10:00:00-08:00",
+    "notes": [
+      "The first full release of ColorMixer for Craft CMS.",
+      "New features include the ability to specify at what point a color is considered light or dark."
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "downloadUrl": "https://github.com/ethercreative/ColorMixer/archive/v1.0.0.zip",
+    "date": "2016-03-29T10:00:00-08:00",
+    "notes": [
+      "Added docs link & Craft releases updates",
+      "Added plugin branding",
+      "Bumped version number to 1.0.0"
+    ]
+  }
+]

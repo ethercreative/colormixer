@@ -9,7 +9,12 @@ class ColorMixerPlugin extends BasePlugin {
 
 	public function getVersion()
 	{
-		return '0.1.2';
+		return '1.0.0';
+	}
+
+	public function getSchemaVersion()
+	{
+		return '0.0.1';
 	}
 
 	public function getDeveloper()
@@ -20,6 +25,16 @@ class ColorMixerPlugin extends BasePlugin {
 	public function getDeveloperUrl()
 	{
 		return 'http://ethercreative.co.uk';
+	}
+
+	public function getDocumentationUrl()
+	{
+		return 'https://github.com/ethercreative/ColorMixer/blob/master/readme.md';
+	}
+
+	public function getDescription()
+	{
+		return 'A set of Twig filters for modifying hex colors';
 	}
 
 	public function hasCpSection()
