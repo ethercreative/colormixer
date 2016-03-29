@@ -48,4 +48,9 @@ class ColorMixerPlugin extends BasePlugin {
 
 		return new ColorMixerTwigExtension();
 	}
+
+	public function getReleaseFeedUrl()
+	{
+		return 'https://raw.githubusercontent.com/ethercreative/ColorMixer/master/releases.json';
+	}
 }
