@@ -11,11 +11,20 @@
   {
     "version": "1.0.0",
     "downloadUrl": "https://github.com/ethercreative/ColorMixer/archive/v1.0.0.zip",
-    "date": "2016-03-29T10:00:00-08:00",
+    "date": "2016-03-28T10:00:00-08:00",
     "notes": [
       "Added docs link & Craft releases updates",
       "Added plugin branding",
       "Bumped version number to 1.0.0"
+    ]
+  },
+  {
+    "version": "1.1.0",
+    "downloadUrl": "https://github.com/ethercreative/ColorMixer/archive/v1.1.0.zip",
+    "date": "2016-03-29T10:00:00-08:00",
+    "notes": [
+      "Added `gradientColors` filter",
+      "Added `gradient` filter"
     ]
   }
 ]

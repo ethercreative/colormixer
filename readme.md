@@ -56,8 +56,7 @@ Lightens a hex by the ```$amount``` percentage.
 mix($hexToMixWith, $amount)
 ```
 
-Mixes two hexes together. The ```$amount``` to mix the colors together by is set between -100..0..+100, where 0 is an equal amount of both colors.
-```$amount``` defaults to 0 if not set.
+Mixes two hexes together. The ```$amount``` to mix the colors together by is set between -100..0..+100, where 0 is an equal amount of both colors. ```$amount``` defaults to 0 if not set.
 
 
 **isLight**
@@ -86,7 +85,34 @@ complementary
 
 Returns the complimentary color.
 
+
+**gradientColors**
+
+```twig
+gradientColors($amount, $threshold)
+```
+
+Returns an array with the input color and a slightly darkened / lightened counterpart (depending on whether the input color is light or dark). Both parameters are *optional*.  
+`$amount` defines how much lighter or darker the color should be made (defaults to 10, range is 0..100).  
+`$threshold` determines at what point the color is considered dark. Anything below or equal to this value is considered dark. Defaults to 130, range is 0..255.
+
+
+**gradient**
+
+```twig
+gradient($direction, $amountOrSecondary, $threshold)
+```
+
+Returns a string of CSS containing the styling to give an element a background gradient. All parameters are *optional*.  
+`$direction` defines the direction of the gradient. Must be either: `horizontal` (→), `vertical` (↓), `diagonalDown` (↘), `diagonalUp` (↗), `radial` (○). Defaults to `horizontal`.  
+`$amountOrSecondary` defines the amount to lighten or darken the input color (defaults to 10, range is 0..100) or a hex string for the secondary color.
+`$threshold` determines at what point the color is considered dark. Anything below or equal to this value is considered dark. Defaults to 130, range is 0..255. If `$amountOrSecondary` is a hex string, this value is ignored.
+
 ## Changelog
+
+### 1.1.0
+- Added `gradientColors` filter
+- Added `gradient` filter
 
 ### 1.0.0
 - Added docs link & Craft releases updates

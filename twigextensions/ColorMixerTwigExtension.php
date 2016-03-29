@@ -37,6 +37,8 @@ class ColorMixerTwigExtension extends Twig_Extension {
 			'isLight' => new Twig_Filter_Method($this, 'isLight'),
 			'isDark' => new Twig_Filter_Method($this, 'isDark'),
 			'complementary' => new Twig_Filter_Method($this, 'complementary'),
+			'gradientColors' => new Twig_Filter_Method($this, 'gradientColors'),
+			'gradient' => new Twig_Filter_Method($this, 'gradient'),
 		);
 	}
 
@@ -177,7 +179,8 @@ class ColorMixerTwigExtension extends Twig_Extension {
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function isLight( $color, $threshold = 130 ){
+	public function isLight( $color, $threshold = 130 )
+	{
 		$color = self::_checkHex($color);
 
 		// Get our color
@@ -195,7 +198,8 @@ class ColorMixerTwigExtension extends Twig_Extension {
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function isDark( $color, $threshold = 130 ){
+	public function isDark( $color, $threshold = 130 )
+	{
 		$color = self::_checkHex($color);
 
 		// Get our color
@@ -205,12 +209,14 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		$b = hexdec($color[4].$color[5]);
 		return (( $r*299 + $g*587 + $b*114 )/1000 <= $threshold);
 	}
+
 	/**
 	 * Returns the complimentary color
 	 * @param string $color
 	 * @return string Complementary hex color
 	 */
-	public function complementary($color) {
+	public function complementary($color)
+	{
 		$color = self::_checkHex($color);
 
 		// Get our HSL
@@ -221,12 +227,127 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		return self::_hslToHex($hsl);
 	}
 
+	/**
+	 * Returns an array with the input color and a slightly darkened / lightened counterpart
+	 * @param string $color
+	 * @param int $amount
+	 * @param int $threshold
+	 * @return array
+	 */
+	public function gradientColors ($color, $amount = self::DEFAULT_ADJUST, $threshold = 130)
+	{
+		// Decide which color needs to be made
+		if( $this->isLight($color, $threshold) ) {
+			$lightColor = $color;
+			$darkColor = $this->darken($color, $amount);
+		} else {
+			$lightColor = $this->lighten($color, $amount);
+			$darkColor = $color;
+		}
+
+		// Return our gradient array
+		return array( "light" => $lightColor, "dark" => $darkColor );
+	}
+
+	/**
+	 * Returns a string containing CSS for a gradient background
+	 * @param $color
+	 * @param string $direction
+	 * @param int $amount
+	 * @param int $threshold
+	 * @return string
+	 */
+	public function gradient($color, $direction = 'horizontal', $amount = self::DEFAULT_ADJUST, $threshold = 130 ) {
+		if (is_string($amount)) {
+			$color = $this->_checkHex($color);
+			$amount = $this->_checkHex($amount);
+			$g = ['light' => '#' . $color, 'dark' => '#' . $amount];
+		} else {
+			$g = $this->gradientColors($color, $amount, $threshold);
+		}
+		$css = "";
+
+		$radial = false;
+
+		switch ($direction) {
+			case 'horizontal':
+				$nonStandard = 'left';
+				$standard = 'to right';
+				$gType = 1;
+				break;
+			case 'vertical':
+				$nonStandard = 'top';
+				$standard = 'to bottom';
+				$gType = 0;
+				break;
+			case 'diagonalDown':
+				$nonStandard = '-45deg';
+				$standard = '135deg';
+				$gType = 1;
+				break;
+			case 'diagonalUp':
+				$nonStandard = '45deg';
+				$standard = '45deg';
+				$gType = 1;
+				break;
+			case 'radial':
+				$nonStandard = 'center, ellipse cover';
+				$standard = 'ellipse at center';
+				$gType = 1;
+				$radial = true;
+				break;
+			default:
+				$nonStandard = 'top';
+				$standard = 'to bottom';
+				$gType = 0;
+				break;
+		}
+
+		/* fallback/image non-cover color */
+		$css .= "background-color: #" . $color . ";";
+
+		if ($radial) {
+			/* IE Browsers */
+			$css .= "filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='" . $g['light'] . "', endColorstr='" . $g['dark'] . "', GradientType={$gType});";
+
+			/* Safari 5.1+, Mobile Safari, Chrome 10+ */
+			$css .= "background: -webkit-radial-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Firefox 3.6+ OLD */
+			$css .= "background: -moz-radial-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Opera 11.10+ OLD */
+			$css .= "background: -o-radial-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Unprefixed version (standards): FF 16+, IE10+, Chrome 26+, Safari 7+, Opera 12.1+ */
+			$css .= "background: radial-gradient({$standard}, " . $g['light'] . ", " . $g['dark'] . ");";
+		} else {
+			/* IE Browsers */
+			$css .= "filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='" . $g['light'] . "', endColorstr='" . $g['dark'] . "', GradientType={$gType});";
+
+			/* Safari 5.1+, Mobile Safari, Chrome 10+ */
+			$css .= "background-image: -webkit-linear-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Firefox 3.6+ OLD */
+			$css .= "background-image: -moz-linear-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Opera 11.10+ OLD */
+			$css .= "background-image: -o-linear-gradient({$nonStandard}, " . $g['light'] . ", " . $g['dark'] . ");";
+
+			/* Unprefixed version (standards): FF 16+, IE10+, Chrome 26+, Safari 7+, Opera 12.1+ */
+			$css .= "background-image: linear-gradient({$standard}, " . $g['light'] . ", " . $g['dark'] . ");";
+		}
+
+		// Return our CSS
+		return $css;
+	}
+
 	/////////////////////
 	// Private         //
 	/////////////////////
 
 	/**
-	 *  Given a HSL associative array returns the equivalent HEX string
+	 * Given a HSL associative array returns the equivalent HEX string
 	 * @param array $hsl
 	 * @return string HEX string
 	 * @throws Exception "Bad HSL Array"
@@ -264,7 +385,7 @@ class ColorMixerTwigExtension extends Twig_Extension {
 	}
 
 	/**
-	 *  Given an RGB associative array returns the equivalent HEX string
+	 * Given an RGB associative array returns the equivalent HEX string
 	 * @param array $rgb
 	 * @return string RGB string
 	 * @throws Exception "Bad RGB Array"
