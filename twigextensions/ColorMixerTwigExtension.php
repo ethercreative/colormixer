@@ -258,8 +258,9 @@ class ColorMixerTwigExtension extends Twig_Extension {
 	 * @return string
 	 */
 	public function gradient($color, $direction = 'horizontal', $amount = self::DEFAULT_ADJUST, $threshold = 130 ) {
+		$color = $this->_checkHex($color);
+
 		if (is_string($amount)) {
-			$color = $this->_checkHex($color);
 			$amount = $this->_checkHex($amount);
 			$g = ['light' => '#' . $color, 'dark' => '#' . $amount];
 		} else {

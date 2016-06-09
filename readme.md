@@ -110,6 +110,9 @@ Returns a string of CSS containing the styling to give an element a background g
 
 ## Changelog
 
+### 1.1.1
+- Fixed bug where `gradient` filter would prepend an additional `#` when the `$amountOrSecondary` param is left blank.  
+
 ### 1.1.0
 - Added `gradientColors` filter
 - Added `gradient` filter

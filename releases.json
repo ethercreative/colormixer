@@ -26,5 +26,13 @@
       "Added `gradientColors` filter",
       "Added `gradient` filter"
     ]
+  },
+  {
+    "version": "1.1.1",
+    "downloadUrl": "https://github.com/ethercreative/ColorMixer/archive/v1.1.1.zip",
+    "date": "2016-06-06T10:00:00-08:00",
+    "notes": [
+      "Fixed bug where `gradient` filter would prepend an additional `#` when the `$amountOrSecondary` param is left blank."
+    ]
   }
 ]
