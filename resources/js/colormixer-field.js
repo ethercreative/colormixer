@@ -124,6 +124,8 @@ ColorMixer.Modal = function () {
 
 	this.isOpen = false;
 
+	this.color = new ColorMixer.Color('#000');
+
 	this.elements = {
 		bodies: {},
 		picker: {}
@@ -284,9 +286,10 @@ ColorMixer.Modal.prototype.hide = function () {
  * @returns {Element}
  */
 ColorMixer.Modal.CreateColorPicker = function () {
-	var outputColor = new ColorMixer.Color('#ffff0000'),
-		vsColor = new ColorMixer.Color('#f00'),
-		hueColor = new ColorMixer.Color('#f00');
+	var inputHex = '#f00';
+	var outputColor = new ColorMixer.Color(inputHex),
+		vsColor = new ColorMixer.Color(inputHex),
+		hueColor = new ColorMixer.Color(inputHex);
 
 	var colorPicker = document.createElement('div');
 	colorPicker.className = 'colormixer-modal--color-picker';
@@ -571,6 +574,8 @@ ColorMixer.Color = function (alphaHex) {
 		this._h /= 6;
 
 		this._alphaHex = alphaHex;
+
+		this._onChange = [];
 	};
 
 	Color.HueToRgb = function(p, q, t) {
@@ -626,10 +631,11 @@ ColorMixer.Color = function (alphaHex) {
 		get alphaHex () { return this._alphaHex; },
 		set alphaHex (v) { this._alphaHex = v; this.updateFromAlphaHex(); },
 
-		get rgba() { return 'rgba(' + this.r + ', ' + this.g + ', ' + this.b + ', ' + this.alpha / 100 + ')'; }
-	};
+		get rgba() { return 'rgba(' + this.r + ', ' + this.g + ', ' + this.b + ', ' + this.alpha / 100 + ')'; },
 
-	Color.prototype.onChange = function () {};
+		get onChange () { var self = this; return function () { self._onChange.forEach(function (func) { func(); }); }; },
+		set onChange (v) { this._onChange.push(v); }
+	};
 
 	Color.prototype.updateFromCmyk = function () {
 		this._r = 255 * (1 - this._c) * (1 - this._k);
@@ -693,7 +699,7 @@ ColorMixer.Color = function (alphaHex) {
 		var n = new ColorMixer.Color(this._alphaHex);
 
 		for (var key in this) {
-			if (key[0] !== '_') continue;
+			if (key[0] !== '_' || key === '_onChange') continue;
 			this[key] = n[key];
 		}
 
