@@ -1,0 +1,16 @@
+{
+  "name": "colormixer-gulp",
+  "version": "0.0.1",
+  "devDependencies": {
+    "gulp": "*",
+    "jshint": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-jshint": "*",
+    "gulp-less": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*",
+    "less-plugin-autoprefix": "*",
+    "less-plugin-clean-css": "*"
+  }
+}

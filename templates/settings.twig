@@ -1,0 +1,150 @@
+{% import "_includes/forms" as forms %}
+
+<div class="field">
+	<div class="heading">
+		<label for="colorType">Color Type</label>
+	</div>
+
+	<div class="input">
+		{{ forms.select({
+			label: "Color Type"|t,
+			name: 'colorType',
+			options: colorTypeOptions,
+			value: settings.colorType,
+			id: 'colorType'
+		}) }}
+	</div>
+</div>
+
+<div id="minMaxStops" style="overflow:hidden{{ settings.colorType == 'single' ? ';display:none' }}">
+	<div class="colormixer--column colormixer--half">
+		{{ forms.textField({
+			label: "Min Number of Stops"|t,
+			instructions: "The minimum number of colors in a scheme or gradient. Minumum is 1.",
+			value: settings.numberOfStopsMin,
+			name: 'numberOfStopsMin',
+			type: 'number'
+		}) }}
+	</div>
+
+	<div class="colormixer--column colormixer--half">
+		{{ forms.textField({
+			label: "Max Number of Stops"|t,
+			instructions: "The maximum number of colors in a scheme or gradient. Set to -1 for unlimited.",
+			value: settings.numberOfStopsMax,
+			name: 'numberOfStopsMax',
+			type: 'number'
+		}) }}
+	</div>
+</div>
+
+{{ forms.textField({
+	label: "Max Colors"|t,
+	instructions: "The maximum number of colors a user can add. Set to -1 for unlimited.",
+	value: settings.maxColors,
+	name: 'maxColors',
+	type: 'number'
+}) }}
+
+<div class="field">
+	<div class="heading">
+		<label for="defaultColor">Default Color</label>
+	</div>
+
+	<div class="input">
+		<input type="hidden" id="defaultColor" name="defaultColor"
+		       value='{{ settings.defaultColor }}' data-colormixer="{{ settings.colorType }}" data-picker="true"
+		       data-alpha="true" data-hex="true" data-rgb="true" data-cmyk="true">
+	</div>
+</div>
+
+<div class="colormixer--column">
+	{{ forms.lightswitchField({
+		label: "Show Picker"|t,
+		instructions: 'Show the color picker',
+		on: settings.showPicker,
+		name: 'showPicker',
+		toggle: '#pickerSettings'
+	}) }}
+
+	<div id="pickerSettings">
+		{{ forms.lightswitchField({
+			label: "Show Alpha"|t,
+			instructions: "If disabled, the alpha from the default color will be used.",
+			on: settings.showAlpha,
+			name: 'showAlpha'
+		}) }}
+
+		{{ forms.lightswitchField({
+			label: "Show Hex"|t,
+			on: settings.showHex,
+			name: 'showHex'
+		}) }}
+
+		{{ forms.lightswitchField({
+			label: "Show RGB"|t,
+			on: settings.showRgb,
+			name: 'showRgb'
+		}) }}
+
+		{{ forms.lightswitchField({
+			label: "Show CMYK"|t,
+			on: settings.showCmyk,
+			name: 'showCmyk'
+		}) }}
+
+		{{ forms.lightswitchField({
+			label: "Show Complementary"|t,
+			on: settings.showComplementary,
+			name: 'showComplementary'
+		}) }}
+	</div>
+</div>
+
+<div class="colormixer--column">
+	{{ forms.lightswitchField({
+		label: "Show Swatches"|t,
+		instructions: 'Show predefined swatches',
+		on: settings.showSwatches,
+		name: 'showSwatches',
+		toggle: '#swatchesSettings'
+	}) }}
+
+	<div id="swatchesSettings">
+		<div class="field">
+			<div class="heading">
+				<label for="swatches">Swatches</label>
+			</div>
+
+			<div class="input">
+				<input type="hidden" id="swatches" name="swatches"
+				       value='{{ settings.swatches }}' data-colormixer="{{ settings.colorType }}" data-picker="true"
+				       data-alpha="true" data-hex="true" data-rgb="true" data-cmyk="true" data-multiple="-1">
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="colormixer--column" style="opacity:0.5;pointer-events:none;position:relative">
+	{{ forms.lightswitchField({
+		label: "Show Image"|t,
+		instructions: 'Show image color picker',
+		on: settings.showImage,
+		name: 'showImage',
+		toggle: '#imageSettings'
+	}) }}
+
+	<div id="imageSettings">
+		<div class="field">
+			<div class="heading">
+				<label>Asset Sources</label>
+			</div>
+			{{ forms.checkboxGroup({
+				label: "Asset Sources"|t,
+				name: 'assetSources',
+				options: sourceOptions,
+				values: settings.assetSources
+			}) }}
+		</div>
+	</div>
+</div>
