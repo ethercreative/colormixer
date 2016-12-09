@@ -33,6 +33,8 @@ class ColorMixerTwigExtension extends Twig_Extension {
 			'hexToRgb' => new Twig_Filter_Method($this, 'hexToRgb'),
 			'darken' => new Twig_Filter_Method($this, 'darken'),
 			'lighten' => new Twig_Filter_Method($this, 'lighten'),
+			'saturate' => new Twig_Filter_Method($this, 'saturate'),
+			'alpha' => new Twig_Filter_Method($this, 'alpha'),
 			'mix' => new Twig_Filter_Method($this, 'mix'),
 			'isLight' => new Twig_Filter_Method($this, 'isLight'),
 			'isDark' => new Twig_Filter_Method($this, 'isDark'),
@@ -152,6 +154,49 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		$lighterHSL = $this->_lighten($color, $amount);
 		// Return as HEX
 		return self::_hslToHex($lighterHSL);
+	}
+
+	/**
+	 * Given a HEX value, returns a more saturated color. If no desired amount provided, then the color halfway between
+	 * given HEX and white will be returned.
+	 * @param string $color
+	 * @param int $amount
+	 * @return string Lighter HEX value
+	 */
+	public function saturate( $color, $amount = self::DEFAULT_ADJUST )
+	{
+		$color = self::_checkHex($color);
+
+		$color = $this->hexToHsl($color, true);
+		// Saturate
+		$lighterHSL = $this->_saturate($color, $amount);
+		// Return as HEX
+		return self::_hslToHex($lighterHSL);
+	}
+
+	/**
+	 * Given a HEX value, returns a semi-transparent color.
+	 * @param string $color
+	 * @param int $amount
+	 * @return string Lighter HEX value
+	 */
+	public function alpha( $color, $amount = self::DEFAULT_ADJUST, $returnAsArray = false )
+	{
+		$color = self::_checkHex($color);
+
+		$color = $this->hexToRgb($color, true);
+
+		// Normalise alpha values (e.g. support 30 and 0.3)
+		if ($amount > 1) { $amount = $amount / 100; }
+		// Fade
+		$RGBA['R'] = $color['R'];
+		$RGBA['G'] = $color['G'];
+		$RGBA['B'] = $color['B'];
+		$RGBA['A'] = $amount;
+
+		return $returnAsArray ? $RGBA : implode(",", $RGBA);
+
+		// Return as RGBA
 	}
 
 	/**
@@ -435,6 +480,23 @@ class ColorMixerTwigExtension extends Twig_Extension {
 		} else {
 			// We need to find out how much to lighten
 			$hsl['L'] += (1-$hsl['L'])/2;
+		}
+		return $hsl;
+	}
+	/**
+	 * Saturates a given HSL array
+	 * @param array $hsl
+	 * @param int $amount
+	 * @return array $hsl
+	 */
+	private function _saturate( $hsl, $amount = self::DEFAULT_ADJUST){
+		// Check if we were provided a number
+		if( $amount ) {
+			$hsl['S'] = ($hsl['S'] * 100) + $amount;
+			$hsl['S'] = ($hsl['S'] > 100) ? 1:$hsl['S']/100;
+		} else {
+			// We need to find out how much to lighten
+			$hsl['S'] += (1-$hsl['S'])/2;
 		}
 		return $hsl;
 	}
